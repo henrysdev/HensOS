@@ -11,7 +11,7 @@ UserInterface::UserInterface(JobQueue* j)
 
 void UserInterface::print()
 {
-    std::cout << "asdf" << std::endl;
+    jobs->print();
 }
 
 

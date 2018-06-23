@@ -11,6 +11,26 @@ JobQueue::JobQueue(int cap)
 }
 
 
+void JobQueue::print()
+{
+    if (!head || !tail)
+    {
+        std::cout << "(empty)" << std::endl;
+        return;
+    }
+
+    ListNode* curr = head;
+    while (curr)
+    {
+        std::cout << curr->val->pid;
+        curr = curr->next;
+        if (curr)
+            std::cout << " -> ";
+    }
+    std::cout << std::endl;
+}
+
+
 void JobQueue::add(int pid, int pos)
 {
     // if list has room in it
@@ -124,21 +144,4 @@ void JobQueue::del(int targ_pid)
         return;
     }
 
-}
-
-
-void JobQueue::print()
-{
-    if (!head || !tail)
-    {
-        std::cout << "(empty)" << std::endl;
-    }
-
-    ListNode* curr = head;
-    while (curr)
-    {
-        std::cout << curr->val->pid << std::endl;
-        curr = curr->next;
-    }
-    std::cout << "\n" << std::endl;
 }
