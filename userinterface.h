@@ -10,9 +10,10 @@ public:
     int mainmenu();
 private:
     JobQueue* jobs;
-    int addmenu();
-    int delmenu();
-    void print();
+    void addmenu();
+    void delmenu();
+    void invalid();
+    void printqueue();
 };
 
 #endif

@@ -9,15 +9,21 @@ UserInterface::UserInterface(JobQueue* j)
 }
 
 
-void UserInterface::print()
+void UserInterface::printqueue()
 {
     jobs->print();
 }
 
 
-int UserInterface::addmenu ()
+void UserInterface::invalid()
 {
-    const char* menutxt = "ADD PCB\n";
+    std::cout << "Error: Invalid Input" << std::endl;
+}
+
+
+void UserInterface::addmenu ()
+{
+    const char* menutxt = "\nADD PCB";
     std::cout << menutxt << std::endl;
 
     for (;;)
@@ -60,18 +66,18 @@ int UserInterface::addmenu ()
             // invalid
             default:
             {
-                std::cout << "invalid input" << std::endl;
-                break;
+                invalid();
+                continue;
             }
         }
-        return 0;
+        return;
     }
 }
 
 
-int UserInterface::delmenu ()
+void UserInterface::delmenu ()
 {
-    const char* menutxt = "DELETE PCB\n";
+    const char* menutxt = "\nDELETE PCB";
     std::cout << menutxt << std::endl;
 
     for (;;)
@@ -108,18 +114,18 @@ int UserInterface::delmenu ()
             // invalid
             default:
             {
-                std::cout << "invalid input" << std::endl;
-                break;
+                invalid();
+                continue;
             }
         }
-        return 0;
+        return;
     }
 }
 
 
 int UserInterface::mainmenu ()
 {
-    const char* menutxt = "ACTION MENU\n"
+    const char* menutxt = "\nACTION MENU\n"
                           "(1) Add PCB\n"
                           "(2) Delete PCB\n"
                           "(3) Print Job Queue\n"
@@ -136,33 +142,30 @@ int UserInterface::mainmenu ()
             // add to queue
             case 1:
             {
-                int excode = addmenu();
+                addmenu();
                 break;
             }
             // del from queue
             case 2:
             {
-                int excode = delmenu();
+                delmenu();
                 break;
             } 
             // print queue
             case 3:
             {
-                print();
+                printqueue();
                 break;
             }
             // exit
             case 0:
             {
-                // flesh out
-                std::cout << "*exit program*" << std::endl;
                 return 0;
             }
             // invalid
             default:
             {
-                // flesh out
-                std::cout << "*invalid entry*" << std::endl;
+                invalid();
                 break;
             }
         }
