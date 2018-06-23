@@ -1,49 +1,43 @@
+#include <iostream>
+#include <string>
+
 #include "jobqueue.h"
 #include "userinterface.h"
-#include <iostream>
+#include "csvreader.h"
 
 #define NUM_PROCESSES 10
 #define FIRST_PID 1000
 #define MAX_CAPACITY 10
 
-int demo()
+
+int demo(const char* csvpath)
 {
     JobQueue* jobs = new JobQueue(MAX_CAPACITY);
     UserInterface* ui = new UserInterface(jobs);
 
-    return ui->mainmenu();
-
-    /*
-        // test Add function
-        for(int i = 0; i < NUM_PROCESSES; i++)
-        {
-            int new_pid = FIRST_PID + i;
-            if (!(i % 2))
-            {
-                std::cout << "appending new PID " << new_pid << " to tail" << std::endl;
-                jobs->add(new_pid, -1);
-            }
-            else
-            {
-                std::cout << "appending new PID " << new_pid << " to pos " << 0 << std::endl;
-                jobs->add(new_pid, 0);
-            }
-
-            jobs->print();
-        }
-
-        // test Del function
-        for(int i = 0; i < NUM_PROCESSES; i++)
-        {
-            int targ_pid = FIRST_PID + i;
-            std::cout << "deleting PID " << targ_pid << std::endl;
-            jobs->del(targ_pid);
-            jobs->print();
-        }
-    */
+    if (csvpath[0] == '\0')
+    {
+        return ui->mainmenu();
+    }
+    else
+    {
+        CsvReader* reader = new CsvReader(jobs);
+        return reader->readin(csvpath);
+    }
 }
 
-int main (int argc, char** argv)
+
+int main (int argc, char* argv[])
 {
-    return demo();
+    // default run mode (manual input) is run when no extra args passed
+    if (argc == 1)
+    {
+        return demo("");
+    }
+    // automatic run mode (csv input) run when filepath is provided
+    else if (argc == 2)
+    {
+        const char* csvpath = argv[1];
+        return demo(csvpath);
+    }
 }
