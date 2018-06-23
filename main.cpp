@@ -9,23 +9,35 @@
 #define FIRST_PID 1000
 #define MAX_CAPACITY 10
 
-int demo(int mode)
+
+int demo(const char* csvpath)
 {
     JobQueue* jobs = new JobQueue(MAX_CAPACITY);
     UserInterface* ui = new UserInterface(jobs);
 
-    if (mode == 0)
+    if (csvpath[0] == '\0')
     {
         return ui->mainmenu();
     }
-    else if (mode == 1)
+    else
     {
         CsvReader* reader = new CsvReader(jobs);
-        return reader->readin("example.csv");
+        return reader->readin(csvpath);
     }
 }
 
-int main (int argc, char** argv)
+
+int main (int argc, char* argv[])
 {
-    return demo(1);
+    // default run mode (manual input) is run when no extra args passed
+    if (argc == 1)
+    {
+        return demo("");
+    }
+    // automatic run mode (csv input) run when filepath is provided
+    else if (argc == 2)
+    {
+        const char* csvpath = argv[1];
+        return demo(csvpath);
+    }
 }
