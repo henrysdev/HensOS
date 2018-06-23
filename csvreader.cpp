@@ -16,6 +16,7 @@ CsvReader::CsvReader (JobQueue* j)
 int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str)
 {
     // add command
+    // TODO: come up with more elegant solution... (cast to lowercase before strcmp?)
     if (cmd == "add" || cmd == "Add" || cmd == "ADD")
     {
         if (!pid_str.empty())
@@ -38,6 +39,7 @@ int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str
         }
     }
     // delete command
+    // TODO: come up with more elegant solution... (cast to lowercase before strcmp?)
     else if (cmd == "del" || cmd == "Del" || cmd == "DEL" || cmd == "delete" || cmd == "Delete" || cmd == "DELETE")
     {
         if (!pid_str.empty())
@@ -52,11 +54,13 @@ int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str
         }
     }
     // print out queue
+    // TODO: come up with more elegant solution... (cast to lowercase before strcmp?)
     else if (cmd == "print" || cmd == "Print" || cmd == "PRINT")
     {
         jobs->print();
     }
     // exit program
+    // TODO: come up with more elegant solution... (cast to lowercase before strcmp?)
     else if (cmd == "exit" || cmd == "Exit" || cmd == "EXIT")
     {
         return 1;
