@@ -81,9 +81,9 @@ int CsvReader::readin(const char* fpath)
     // iterate through csv file and execute line-by-line
     while (ip.good())
     {
-        getline(ip, line, '\n'); // grab line
-        std::remove_if(line.begin(), line.end(), isspace);
-        std::string delimiter = ",";//">=";
+        getline(ip, line, '\n');
+        //std::remove_if(line.begin(), line.end(), isspace);
+        std::string delimiter = ",";
 
         size_t s_pos = 0;
         std::string token;
@@ -95,6 +95,7 @@ int CsvReader::readin(const char* fpath)
             line.erase(0, s_pos + delimiter.length());
             ++ctr;
         }
+        line = line.substr(0, line.length());
         args[ctr] = line;
 
         cmd = args[0];
@@ -102,7 +103,8 @@ int CsvReader::readin(const char* fpath)
         pos = args[2];
 
 
-        // DEBUG PRINT
+        // DEBUG PRINT READ IN LINE
+        /*
         for (int i = 0; i <= ctr; i++)
         {
             std::cout << args[i];
@@ -112,6 +114,7 @@ int CsvReader::readin(const char* fpath)
             }
         }
         std::cout << std::endl;
+        */
         //
 
 
