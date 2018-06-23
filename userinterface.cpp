@@ -4,6 +4,8 @@
 
 #include "userinterface.h"
 
+#define EVER ;;
+
 
 UserInterface::UserInterface(JobQueue* j)
 {
@@ -127,10 +129,10 @@ int UserInterface::mainmenu ()
                           "(3) Print Job Queue\n"
                           "(0) Quit\n"
                           "> ";
-    for(;;)
+    for(EVER)
     {
         std::cout << menutxt;
-        
+
         int choice;
         std::cin >> choice;
 
