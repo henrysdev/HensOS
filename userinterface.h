@@ -5,15 +5,15 @@
 
 class UserInterface
 {
-public:
-    UserInterface(JobQueue*);
-    int mainmenu();
 private:
     JobQueue* jobs;
     void addmenu();
     void delmenu();
     void invalid();
     void printqueue();
+public:
+    UserInterface(JobQueue*);
+    int mainmenu();
 };
 
 #endif

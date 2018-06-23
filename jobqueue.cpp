@@ -13,6 +13,7 @@ JobQueue::JobQueue(int cap)
 
 void JobQueue::print()
 {
+    std::cout << std::endl;
     if (!head || !tail)
     {
         std::cout << "(empty)" << std::endl;
@@ -27,7 +28,7 @@ void JobQueue::print()
         if (curr)
             std::cout << " -> ";
     }
-    std::cout << std::endl;
+    std::cout << "\n" << std::endl;
 }
 
 
@@ -51,6 +52,7 @@ void JobQueue::add(int pid, int pos)
         {
             head = tail = link;
             ++length;
+            print();
             return;
         }
 
@@ -92,6 +94,7 @@ void JobQueue::add(int pid, int pos)
     {
         std::cout << "maximum capacity, can't accept any more processes!" << std::endl;
     }
+    print();
 }
 
 
@@ -107,6 +110,7 @@ void JobQueue::del(int targ_pid)
         {
             head = curr->next;
             --length;
+            print();
             return;
         }
 
@@ -117,6 +121,7 @@ void JobQueue::del(int targ_pid)
             {
                 curr->next = curr->next->next;
                 --length;
+                print();
                 return;
             }
             curr = curr->next;
@@ -128,6 +133,7 @@ void JobQueue::del(int targ_pid)
             tail->next = curr;
             tail = curr;
             --length;
+            print();
             return;
         }
 
@@ -141,6 +147,7 @@ void JobQueue::del(int targ_pid)
     else
     {
         std::cout << "nothing to delete, queue is empty" << std::endl;
+        print();
         return;
     }
 
