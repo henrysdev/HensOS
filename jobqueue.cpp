@@ -6,8 +6,8 @@ JobQueue::JobQueue(int cap)
 {
     capacity = cap;
     length = 0;
-    head = nullptr;
-    tail = nullptr;
+    head = 0;
+    tail = 0;
 }
 
 
@@ -80,20 +80,18 @@ void JobQueue::del(int targ_pid)
     // if the list is not empty
     if (length > 0)
     {
-        if (targ_pid == -1)
-        {
-               
-        }
         ListNode* curr = head;
 
-        if (curr->val->pid == targ_pid)
+        // delete head if no PID specified (default case) OR if head has target PID 
+        if (targ_pid == -1 || curr->val->pid == targ_pid)
         {
             head = curr->next;
             --length;
             return;
         }
 
-        while (curr->next != NULL)
+        // iterate through list until target PID is found
+        while (curr->next)
         {
             if (curr->next->val->pid == targ_pid)
             {
@@ -104,6 +102,7 @@ void JobQueue::del(int targ_pid)
             curr = curr->next;
         }
 
+        // check last list node for matching PID
         if (curr->val->pid == targ_pid)
         {
             tail->next = curr;
@@ -111,6 +110,8 @@ void JobQueue::del(int targ_pid)
             --length;
             return;
         }
+
+        // no matching PID found
         else
         {
             std::cout << "pid " << targ_pid << " not found in job queue" << std::endl;
@@ -132,8 +133,9 @@ void JobQueue::print()
     {
         std::cout << "(empty)" << std::endl;
     }
+
     ListNode* curr = head;
-    while (curr != NULL)
+    while (curr)
     {
         std::cout << curr->val->pid << std::endl;
         curr = curr->next;
