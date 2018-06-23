@@ -1,3 +1,6 @@
+#ifndef JOBQUEUE_H
+#define JOBQUEUE_H
+
 #include "listnode.h"
 
 
@@ -14,3 +17,5 @@ public:
     void del(int targ_pid);
     void print();
 };
+
+#endif
