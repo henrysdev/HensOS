@@ -1,3 +1,6 @@
+#ifndef LISTNODE_H
+#define LISTNODE_H
+
 #include "pcb.h"
 
 class ListNode
@@ -7,3 +10,5 @@ public:
     Pcb* val;
     ListNode(Pcb*);
 };
+
+#endif

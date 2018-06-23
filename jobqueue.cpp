@@ -22,7 +22,7 @@ void JobQueue::add(int pid, int pos)
         // if target position is outside of range of list
         if (pos > length)
         {
-            std::cout << "position requested is out of range. Appending to tail" << std::endl;
+            std::cout << "position requested is out of range. Appending to tail instead" << std::endl;
             pos = -1;
         }
 
