@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <algorithm>
 
+#include "pcb.h"
 #include "csvreader.h"
 
 
@@ -22,14 +23,16 @@ int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str
         if (!pid_str.empty())
         {
             int pid = atoi(pid_str.c_str());
+            Pcb* process = new Pcb(pid);
+
             if (!pos_str.empty())
             {
                 int pos = atoi(pos_str.c_str());
-                jobs->add(pid, pos);
+                jobs->add(process, pos);
             }
             else
             {
-                jobs->add(pid, -1);
+                jobs->add(process, -1);
             }
         }
         // return error (malformed input line)
@@ -108,7 +111,7 @@ int CsvReader::readin(const char* fpath)
 
 
         // DEBUG PRINT READ IN LINE
-        /*
+        std::cout << "\n" << std::endl;
         for (int i = 0; i <= ctr; i++)
         {
             std::cout << args[i];
@@ -118,9 +121,6 @@ int CsvReader::readin(const char* fpath)
             }
         }
         std::cout << std::endl;
-        */
-        //
-
 
         int res = execute(cmd, pid, pos);
         if (res == 1 || res == -1)

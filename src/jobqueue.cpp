@@ -25,19 +25,17 @@ void JobQueue::print()
     {
         std::cout << curr->val->pid;
         curr = curr->next;
-        if (curr)
-            std::cout << " -> ";
+        if (curr) std::cout << " -> ";
     }
     std::cout << "\n" << std::endl;
 }
 
 
-void JobQueue::add(int pid, int pos)
+void JobQueue::add(Pcb* proc, int pos)
 {
     // if list has room in it
     if (length < capacity) 
     {
-        Pcb* proc = new Pcb(pid);
         ListNode* link = new ListNode(proc);
 
         // if target position is outside of range of list
