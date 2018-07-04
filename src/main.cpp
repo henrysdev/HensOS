@@ -4,7 +4,8 @@
 #include "jobqueue.h"
 #include "userinterface.h"
 #include "csvreader.h"
-#include "shortestjobfirst.h"
+#include "sjfscheduler.h"
+#include "priorityscheduler.h"
 
 #define NUM_PROCESSES 10
 #define FIRST_PID 1000
@@ -16,7 +17,8 @@ int demo(const char* csvpath)
     JobQueue* ready = new JobQueue(MAX_CAPACITY);
     JobQueue* waiting = new JobQueue(MAX_CAPACITY);
 
-    Sjf* scheduler = new Sjf(ready, waiting);
+    //SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
+    PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
 
     if (csvpath[0] == '\0')
     {

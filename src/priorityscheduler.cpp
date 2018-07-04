@@ -1,14 +1,13 @@
-#include "shortestjobfirst.h"
+#include "priorityscheduler.h"
 
-
-Sjf::Sjf(JobQueue * rq, JobQueue * wq)
+PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
 {
-    ready_queue = rq;
-    waiting_queue = wq;
+    ready_queue   = _ready_queue;
+    waiting_queue = _waiting_queue;
 }
 
 
-void Sjf::handle(Pcb * process)
+void PriorityScheduler::handle(Pcb * process)
 {
     if (!ready_queue->length)
     {
@@ -22,7 +21,7 @@ void Sjf::handle(Pcb * process)
     while (tmp->next)
     {
         /* if new process has shorter burst time, add at the correct pos */
-        if (process->burst < tmp->val->burst)
+        if (process->priority < tmp->val->priority)
         {
             ready_queue->add(process, pos);
             return;
@@ -30,7 +29,7 @@ void Sjf::handle(Pcb * process)
         tmp = tmp->next;
         ++pos;
     }
-    if (process->burst < tmp->val->burst)
+    if (process->priority < tmp->val->priority)
     {
         ready_queue->add(process, pos);
         return;
