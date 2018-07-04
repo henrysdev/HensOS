@@ -14,8 +14,15 @@ CsvReader::CsvReader (JobQueue* j)
 }
 
 
-int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str)
+int CsvReader::execute(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str)
 {
+    int pid = atoi(pid_str.c_str());
+    int arrival = atoi(arrival_str.c_str());
+    int burst = atoi(burst_str.c_str());
+    int priority = atoi(priority_str.c_str());
+
+    Pcb* process = new Pcb(pid, arrival, burst, priority);
+    /*
     // add command
     // TODO: come up with more elegant solution... (cast to lowercase before strcmp?)
     if (cmd == "add" || cmd == "Add" || cmd == "ADD")
@@ -70,9 +77,10 @@ int CsvReader::execute(std::string cmd, std::string pid_str, std::string pos_str
     }
 
     return 0;
-} 
+     */
+}
 
-
+//Process_id, arrival_time, burst_time, priority
 int CsvReader::readin(const char* fpath)
 {   
     std::ifstream ip(fpath);
@@ -81,22 +89,23 @@ int CsvReader::readin(const char* fpath)
 
     std::string line;
 
-    std::string cmd;
     std::string pid;
-    std::string pos;
+    std::string arrival;
+    std::string burst;
+    std::string priority;
 
     // iterate through csv file and execute line-by-line
     while (ip.good())
     {
         getline(ip, line, '\n');
-        //std::remove_if(line.begin(), line.end(), isspace);
         std::string delimiter = ",";
 
         size_t s_pos = 0;
         std::string token;
         int ctr = 0;
         std::string args[4];
-        while ((s_pos = line.find(delimiter)) != std::string::npos) {
+        while ((s_pos = line.find(delimiter)) != std::string::npos)
+        {
             token = line.substr(0, s_pos);
             args[ctr] = token;
             line.erase(0, s_pos + delimiter.length());
@@ -105,9 +114,10 @@ int CsvReader::readin(const char* fpath)
         line = line.substr(0, line.length());
         args[ctr] = line;
 
-        cmd = args[0];
-        pid = args[1];
-        pos = args[2];
+        pid      = args[0];
+        arrival  = args[1];
+        burst    = args[2];
+        priority = args[3];
 
 
         // DEBUG PRINT READ IN LINE
@@ -122,14 +132,15 @@ int CsvReader::readin(const char* fpath)
         }
         std::cout << std::endl;
 
-        int res = execute(cmd, pid, pos);
+        int res = execute(pid, arrival, burst, priority);
         if (res == 1 || res == -1)
         {
             return res;
         }
-        cmd.clear();
         pid.clear();
-        pos.clear();
+        arrival.clear();
+        burst.clear();
+        priority.clear();
 
     }
     return 0;

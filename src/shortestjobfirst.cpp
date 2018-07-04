@@ -15,12 +15,21 @@ void Sjf::handle(Pcb * process)
 
     while (tmp->next)
     {
+        /* if new process has shorter burst time, add at the correct pos */
         if (process->burst < tmp->val->burst)
         {
             ready_queue->add(process, pos);
+            return;
         }
         tmp = tmp->next;
         ++pos;
     }
-    // fit process into waiting queue
+    if (process->burst < tmp->val->burst)
+    {
+        ready_queue->add(process, pos);
+        return;
+    }
+
+    /* add to end of queue by default */
+    ready_queue->add(process, -1);
 }
