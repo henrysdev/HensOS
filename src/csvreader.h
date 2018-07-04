@@ -3,17 +3,17 @@
 
 #include <string>
 
-#include "jobqueue.h"
+#include "scheduler.h"
 
 
 class CsvReader
 {
 private:
-    JobQueue* jobs;
+    Scheduler* scheduler;
 public:
-    CsvReader(JobQueue*);
+    CsvReader(Scheduler*);
     int readin(const char*);
-    int execute(std::string, std::string, std::string);
+    int execute(std::string, std::string, std::string, std::string);
 };
 
 #endif

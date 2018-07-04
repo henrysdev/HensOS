@@ -4,6 +4,7 @@
 #include "jobqueue.h"
 #include "userinterface.h"
 #include "csvreader.h"
+#include "shortestjobfirst.h"
 
 #define NUM_PROCESSES 10
 #define FIRST_PID 1000
@@ -12,16 +13,19 @@
 
 int demo(const char* csvpath)
 {
-    JobQueue* jobs = new JobQueue(MAX_CAPACITY);
-    UserInterface* ui = new UserInterface(jobs);
+    JobQueue* ready = new JobQueue(MAX_CAPACITY);
+    JobQueue* waiting = new JobQueue(MAX_CAPACITY);
+
+    Sjf* scheduler = new Sjf(ready, waiting);
 
     if (csvpath[0] == '\0')
     {
+        UserInterface* ui = new UserInterface(ready);
         return ui->mainmenu();
     }
     else
     {
-        CsvReader* reader = new CsvReader(jobs);
+        CsvReader* reader = new CsvReader(scheduler);
         return reader->readin(csvpath);
     }
 }

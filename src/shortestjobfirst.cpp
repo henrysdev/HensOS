@@ -10,6 +10,12 @@ Sjf::Sjf(JobQueue * rq, JobQueue * wq)
 
 void Sjf::handle(Pcb * process)
 {
+    if (!ready_queue->length)
+    {
+        ready_queue->add(process, -1);
+        return;
+    }
+
     ListNode* tmp = ready_queue->head;
     int pos = 0;
 

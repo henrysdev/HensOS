@@ -8,8 +8,8 @@ class JobQueue
 {
 private:
     int capacity;
-    int length;
 public:
+    int length;
     ListNode* head;
     ListNode* tail;
     JobQueue(int cap);
