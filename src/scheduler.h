@@ -9,6 +9,7 @@ class Scheduler
 protected:
     JobQueue* waiting_queue;
     JobQueue* ready_queue;
+    int clock;
 public:
     virtual void handle(Pcb* process) = 0;
 };

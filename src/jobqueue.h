@@ -9,7 +9,7 @@ class JobQueue
 private:
     int capacity;
 public:
-    int length;
+    int size;
     ListNode* head;
     ListNode* tail;
     JobQueue(int cap);

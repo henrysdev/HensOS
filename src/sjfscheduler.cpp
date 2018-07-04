@@ -10,7 +10,7 @@ SjfScheduler::SjfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
 
 void SjfScheduler::handle(Pcb * process)
 {
-    if (!ready_queue->length)
+    if (!ready_queue->size)
     {
         ready_queue->add(process, -1);
         return;

@@ -10,6 +10,11 @@ public:
     int priority;
     int burst;
     int arrival;
+    /*
+    bool operator< (const Pcb &other) const {
+        return arrival < other.arrival;
+    }
+     */
 };
 
 #endif

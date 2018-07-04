@@ -14,7 +14,7 @@ CsvReader::CsvReader (Scheduler* _scheduler)
 }
 
 
-int CsvReader::execute(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str)
+Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str)
 {
     int pid = atoi(pid_str.c_str());
     int arrival = atoi(arrival_str.c_str());
@@ -23,9 +23,7 @@ int CsvReader::execute(std::string pid_str, std::string arrival_str, std::string
 
     Pcb* process = new Pcb(pid, arrival, burst, priority);
 
-    scheduler->handle(process);
-
-    return 0;
+    return process;
 }
 
 //Process_id, arrival_time, burst_time, priority
@@ -35,7 +33,7 @@ int CsvReader::readin(const char* fpath)
 
     if (!ip.is_open()) std::cout << "ERROR: file open" << "\n";
 
-    std::string line;
+    std::vector<Pcb*> processes;
 
     std::string pid;
     std::string arrival;
@@ -43,6 +41,7 @@ int CsvReader::readin(const char* fpath)
     std::string priority;
 
     // iterate through csv file and execute line-by-line
+    std::string line;
     while (ip.good())
     {
         getline(ip, line, '\n');
@@ -80,16 +79,34 @@ int CsvReader::readin(const char* fpath)
         }
         std::cout << std::endl;
 
-        int res = execute(pid, arrival, burst, priority);
-        if (res == 1 || res == -1)
-        {
-            return res;
-        }
+        /* parse line into PCB object and add it to list of PCBs for pre-processing */
+        Pcb* proc = parse_pcb(pid, arrival, burst, priority);
+        processes.push_back(proc);
+
         pid.clear();
         arrival.clear();
         burst.clear();
         priority.clear();
-
     }
+
+    execute(&processes);
+
     return 0;
+}
+
+
+bool compByArrival(Pcb* a, Pcb* b)
+{
+    return a->arrival < b->arrival;
+}
+
+
+void CsvReader::execute(std::vector<Pcb*>* processes)
+{
+    std::sort(processes->begin(), processes->end(), compByArrival);
+
+    for (int i = 0; i < processes->size(); i++)
+    {
+        scheduler->handle(processes->at(i));
+    }
 }

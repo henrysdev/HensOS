@@ -9,7 +9,7 @@ PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waitin
 
 void PriorityScheduler::handle(Pcb * process)
 {
-    if (!ready_queue->length)
+    if (!ready_queue->size)
     {
         ready_queue->add(process, -1);
         return;
