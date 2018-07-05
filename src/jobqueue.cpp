@@ -54,7 +54,7 @@ void JobQueue::add(Pcb* proc, int pos)
     {
         head = tail = link;
         ++size;
-        print();
+        //print();
         return;
     }
 
@@ -90,7 +90,7 @@ void JobQueue::add(Pcb* proc, int pos)
         }
     }
     ++size;
-    print();
+    //print();
 }
 
 
@@ -106,7 +106,7 @@ void JobQueue::del(int targ_pid)
         {
             head = curr->next;
             --size;
-            print();
+            //print();
             return;
         }
 
@@ -117,7 +117,7 @@ void JobQueue::del(int targ_pid)
             {
                 curr->next = curr->next->next;
                 --size;
-                print();
+                //print();
                 return;
             }
             curr = curr->next;
@@ -129,7 +129,7 @@ void JobQueue::del(int targ_pid)
             tail->next = curr;
             tail = curr;
             --size;
-            print();
+            //print();
             return;
         }
 
@@ -143,7 +143,7 @@ void JobQueue::del(int targ_pid)
     else
     {
         std::cout << "nothing to delete, queue is empty" << std::endl;
-        print();
+        //print();
         return;
     }
 

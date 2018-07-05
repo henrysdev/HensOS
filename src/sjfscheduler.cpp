@@ -1,6 +1,12 @@
 #include "sjfscheduler.h"
 #include <algorithm>
 
+
+#include <string>
+#include <sstream>
+#include <iostream>
+
+
 SjfScheduler::SjfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
 {
     ready_queue = _ready_queue;
@@ -13,11 +19,10 @@ void SjfScheduler::handle(Pcb * process)
     if (!ready_queue->size)
     {
         ready_queue->add(process, -1);
-        clock += process->burst;
         return;
     }
 
-    ListNode* tmp = ready_queue->head;
+    ListNode *tmp = ready_queue->head;
     int pos = 0;
 
     while (tmp->next)
@@ -48,36 +53,94 @@ const bool compByBurst(Pcb* a, Pcb* b)
 }
 
 
+const int sum_burst_times (std::vector<Pcb*>* procs)
+{
+    int sum = 0;
+    for (int i = 0; i < procs->size(); i++)
+    {
+        sum += procs->at(i)->burst;
+        sum += procs->at(i)->arrival;
+    }
+    return sum;
+}
+
+
+std::string numtostr(int num)
+{
+    std::ostringstream ss;
+    ss << num;
+    return ss.str();
+}
+
+
 void SjfScheduler::simulate(std::vector<Pcb*>* processes)
 {
-    /* sort processes by arrival time before scheduling*/
+    /* sort by order of arrival time for simulation */
     std::stable_sort(processes->begin(), processes->end(), compByArrival);
     clock = 0;
+    std::string linestr = "\n ";
+    std::string timestr = "";
     int i = 0;
-    /* holds processes arriving at a given clock time */
     std::vector<Pcb*>* arriving_procs = new std::vector<Pcb*>;
+    int alltime = sum_burst_times(processes);
+    bool busy = 0;
+    int deadline = 0;
+    Pcb* nextproc = NULL;
 
-    while (i < processes->size())
+    while (clock < alltime)
     {
-        while (processes->at(i)->arrival == clock)
+        /* increment through given processes by arrival time */
+        if (i < processes->size())
         {
-            arriving_procs->push_back(processes->at(i));
-            ++i;
-            if (i >= processes->size())
+            while (processes->at(i)->arrival == clock)
             {
-                break;
+                arriving_procs->push_back(processes->at(i));
+                ++i;
+                if (i >= processes->size())
+                {
+                    break;
+                }
             }
         }
         if (arriving_procs->size() > 0)
         {
-            /* sort processes with the same arrival time by priority before handling*/
-            std::sort(arriving_procs->begin(), arriving_procs->end(), compByBurst);
+            //std::sort(arriving_procs->begin(), arriving_procs->end(), compByBurst);
             for (int n = 0; n < arriving_procs->size(); n++)
             {
                 handle(arriving_procs->at(n));
             }
             arriving_procs->clear();
         }
+
+        /* non-preemptive */
+        if (clock == deadline)
+        {
+            timestr += numtostr(clock);
+            busy = 0;
+        }
+        if (!busy && ready_queue->size > 0)
+        {
+            nextproc = ready_queue->head->val;
+            ready_queue->del(-1);
+            // TODO simulate / keep track of process that is executing
+            //handle(nextproc);
+            deadline = clock + nextproc->burst;
+            busy = 1;
+        }
+
+        if (busy)
+        {
+            linestr += numtostr(nextproc->pid)[0];
+            linestr += " ";
+        }
+        else
+        {
+            linestr += "_ ";
+        }
         ++clock;
+        timestr += " ";
     }
+
+    std::cout << linestr << std::endl;
+    std::cout << timestr << std::endl;
 }

@@ -18,8 +18,8 @@ int demo(const char* csvpath)
     JobQueue* ready = new JobQueue(MAX_CAPACITY);
     JobQueue* waiting = new JobQueue(MAX_CAPACITY);
 
-    //SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
-    PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
+    SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
+    //PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
 
     if (csvpath[0] == '\0')
     {
@@ -31,9 +31,10 @@ int demo(const char* csvpath)
         CsvReader* reader = new CsvReader(scheduler);
         std::vector<Pcb*>* procs = reader->readin(csvpath);
         scheduler->simulate(procs);
-        GanttChart* chartbuilder = new GanttChart(ready);
-        std::string output = chartbuilder->buildChart();
-        std::cout << output << std::endl;
+
+        //GanttChart* chartbuilder = new GanttChart(ready);
+        //std::string output = chartbuilder->buildChart();
+        //std::cout << output << std::endl;
         return 0;
     }
 }

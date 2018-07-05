@@ -8,6 +8,7 @@ GanttChart::GanttChart(JobQueue * _queue)
 }
 
 
+/*
 std::string numtostr(int num)
 {
     std::ostringstream ss;
@@ -35,3 +36,4 @@ std::string GanttChart::buildChart()
 
     return linestr;
 }
+ */
