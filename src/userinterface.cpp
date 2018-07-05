@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 #include "userinterface.h"
+#include "pcb.h"
+
+#define EVER ;;
 
 
 UserInterface::UserInterface(JobQueue* j)
@@ -49,7 +52,8 @@ void UserInterface::addmenu ()
         // append to tail of queue
         case 1:
         {
-            jobs->add(pid, -1);
+            Pcb* process = new Pcb(pid);
+            jobs->add(process, -1);
             break;
         }
         // add by position
@@ -60,7 +64,8 @@ void UserInterface::addmenu ()
             std::cout << postxt;
             int pos;
             std::cin >> pos;
-            jobs->add(pid, pos);
+            Pcb* process = new Pcb(pid);
+            jobs->add(process, pos);
             break;
         }
         // invalid
@@ -127,10 +132,10 @@ int UserInterface::mainmenu ()
                           "(3) Print Job Queue\n"
                           "(0) Quit\n"
                           "> ";
-    for(;;)
+    for(EVER)
     {
         std::cout << menutxt;
-        
+
         int choice;
         std::cin >> choice;
 
