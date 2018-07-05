@@ -11,10 +11,9 @@ class CsvReader
 {
 private:
     Scheduler* scheduler;
-    void execute(std::vector<Pcb*>*);
 public:
     CsvReader(Scheduler*);
-    int readin(const char*);
+    std::vector<Pcb*>* readin(const char*);
     Pcb* parse_pcb(std::string, std::string, std::string, std::string);
 };
 

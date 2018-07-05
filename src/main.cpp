@@ -6,6 +6,7 @@
 #include "csvreader.h"
 #include "sjfscheduler.h"
 #include "priorityscheduler.h"
+#include "ganttchart.h"
 
 #define NUM_PROCESSES 10
 #define FIRST_PID 1000
@@ -28,7 +29,12 @@ int demo(const char* csvpath)
     else
     {
         CsvReader* reader = new CsvReader(scheduler);
-        return reader->readin(csvpath);
+        std::vector<Pcb*>* procs = reader->readin(csvpath);
+        scheduler->simulate(procs);
+        GanttChart* chartbuilder = new GanttChart(ready);
+        std::string output = chartbuilder->buildChart();
+        std::cout << output << std::endl;
+        return 0;
     }
 }
 

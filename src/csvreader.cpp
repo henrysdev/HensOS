@@ -27,13 +27,13 @@ Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::str
 }
 
 //Process_id, arrival_time, burst_time, priority
-int CsvReader::readin(const char* fpath)
+std::vector<Pcb*>* CsvReader::readin(const char* fpath)
 {   
     std::ifstream ip(fpath);
 
     if (!ip.is_open()) std::cout << "ERROR: file open" << "\n";
 
-    std::vector<Pcb*> processes;
+    std::vector<Pcb*>* processes = new std::vector<Pcb*>;
 
     std::string pid;
     std::string arrival;
@@ -81,32 +81,12 @@ int CsvReader::readin(const char* fpath)
 
         /* parse line into PCB object and add it to list of PCBs for pre-processing */
         Pcb* proc = parse_pcb(pid, arrival, burst, priority);
-        processes.push_back(proc);
+        processes->push_back(proc);
 
         pid.clear();
         arrival.clear();
         burst.clear();
         priority.clear();
     }
-
-    execute(&processes);
-
-    return 0;
-}
-
-
-bool compByArrival(Pcb* a, Pcb* b)
-{
-    return a->arrival < b->arrival;
-}
-
-
-void CsvReader::execute(std::vector<Pcb*>* processes)
-{
-    std::sort(processes->begin(), processes->end(), compByArrival);
-
-    for (int i = 0; i < processes->size(); i++)
-    {
-        scheduler->handle(processes->at(i));
-    }
+    return processes;
 }
