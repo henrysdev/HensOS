@@ -5,6 +5,7 @@
 #include "userinterface.h"
 #include "csvreader.h"
 #include "sjfscheduler.h"
+#include "simulator.h"
 #include "priorityscheduler.h"
 #include "ganttchart.h"
 
@@ -19,6 +20,7 @@ int demo(const char* csvpath)
     JobQueue* waiting = new JobQueue(MAX_CAPACITY);
 
     SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
+    Simulator* simulator = new Simulator(scheduler);
     //PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
 
     if (csvpath[0] == '\0')
@@ -30,8 +32,8 @@ int demo(const char* csvpath)
     {
         CsvReader* reader = new CsvReader(scheduler);
         std::vector<Pcb*>* procs = reader->readin(csvpath);
-        scheduler->simulate(procs);
 
+        simulator->simulate(procs);
         //GanttChart* chartbuilder = new GanttChart(ready);
         //std::string output = chartbuilder->buildChart();
         //std::cout << output << std::endl;

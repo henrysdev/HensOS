@@ -12,7 +12,6 @@ class PriorityScheduler : public Scheduler
 public:
     PriorityScheduler(JobQueue*, JobQueue*);
     void handle(Pcb* process);
-    void simulate(std::vector<Pcb*> *processes);
 };
 
 #endif //OS_PROJECT_PRIORITYSCHEDULER_H
