@@ -1,5 +1,7 @@
 #include "simulator.h"
+#include <algorithm>
 #include <sstream>
+#include <iostream>
 
 
 Simulator::Simulator(Scheduler* _scheduler)
@@ -33,6 +35,18 @@ const bool comp_by_arrival(Pcb* a, Pcb* b)
 }
 
 
+float calc_avg_wait(std::vector<int>* wait_times)
+{
+    float avg = 0.0f;
+    for (int i = 0; i < wait_times->size(); i++)
+    {
+        std::cout << wait_times->at(i) << std::endl;
+        avg += (float) wait_times->at(i);
+    }
+    return avg / (float) wait_times->size();
+}
+
+
 void Simulator::simulate(std::vector<Pcb*>* processes)
 {
     /* sort by order of arrival time for simulation */
@@ -41,6 +55,7 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
     int clock = 0, i = 0, deadline = 0;
     bool busy = 0;
     int alltime = sum_burst_times(processes);
+    std::vector<int>* wait_times = new std::vector<int>;
 
     Pcb* nextproc = NULL;
     std::vector<Pcb*>* arriving_procs = new std::vector<Pcb*>;
@@ -73,16 +88,22 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
         if (clock == deadline)
         {
             busy = 0;
+            /* calculate wait time */
+            if (nextproc != NULL)
+            {
+                int waittime = clock - nextproc->arrival - nextproc->burst;
+                wait_times->push_back(waittime);
+            }
         }
         if (!busy && scheduler->ready_queue->size > 0)
         {
             nextproc = scheduler->ready_queue->head->val;
             scheduler->ready_queue->del(-1);
-            // TODO simulate / keep track of process that is executing
-            //scheduler->handle(nextproc);
             deadline = clock + nextproc->burst;
             busy = 1;
         }
         ++clock;
     }
+
+    std::cout << calc_avg_wait(wait_times) << std::endl;
 }

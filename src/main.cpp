@@ -19,9 +19,9 @@ int demo(const char* csvpath)
     JobQueue* ready = new JobQueue(MAX_CAPACITY);
     JobQueue* waiting = new JobQueue(MAX_CAPACITY);
 
-    SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
+    //SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
+    PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
     Simulator* simulator = new Simulator(scheduler);
-    //PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
 
     if (csvpath[0] == '\0')
     {
