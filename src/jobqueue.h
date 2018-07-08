@@ -8,12 +8,12 @@ class JobQueue
 {
 private:
     int capacity;
-    int length;
+public:
+    int size;
     ListNode* head;
     ListNode* tail;
-public:
     JobQueue(int cap);
-    void add(int pos, int pid);
+    void add(Pcb* pcb, int pos);
     void del(int targ_pid);
     void print();
 };
