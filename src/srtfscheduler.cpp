@@ -1,14 +1,14 @@
-#include "priorityscheduler.h"
+#include "srtfscheduler.h"
 
 
-PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
+SrtfScheduler::SrtfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
 {
-    ready_queue   = _ready_queue;
+    ready_queue = _ready_queue;
     waiting_queue = _waiting_queue;
 }
 
 
-void PriorityScheduler::handle(Pcb * process)
+void SrtfScheduler::handle(Pcb * process)
 {
     if (!ready_queue->size)
     {
@@ -20,12 +20,12 @@ void PriorityScheduler::handle(Pcb * process)
     int pos = 0;
 
     /* place process in appropriate position in the
-     * ready queue based on priority */
+     * ready queue based on burst time */
     while (tmp->next)
     {
-        /* if new process has higher priority,
+        /* if new process has shorter burst time,
          * add at the correct pos */
-        if (process->priority < tmp->val->priority)
+        if (process->burst < tmp->val->burst)
         {
             ready_queue->add(process, pos);
             return;
@@ -33,7 +33,7 @@ void PriorityScheduler::handle(Pcb * process)
         tmp = tmp->next;
         ++pos;
     }
-    if (process->priority < tmp->val->priority)
+    if (process->burst < tmp->val->burst)
     {
         ready_queue->add(process, pos);
         return;

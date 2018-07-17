@@ -19,9 +19,12 @@ void SjfScheduler::handle(Pcb * process)
     ListNode* tmp = ready_queue->head;
     int pos = 0;
 
+    /* place process in appropriate position in the
+     * ready queue based on burst time */
     while (tmp->next)
     {
-        /* if new process has shorter burst time, add at the correct pos */
+        /* if new process has shorter burst time,
+         * add at the correct pos */
         if (process->burst < tmp->val->burst)
         {
             ready_queue->add(process, pos);
