@@ -10,6 +10,7 @@
 class SjfScheduler : public Scheduler
 {
 public:
+    bool preemptive = false;
     SjfScheduler(JobQueue*, JobQueue*);
     void handle(Pcb* process);
 };

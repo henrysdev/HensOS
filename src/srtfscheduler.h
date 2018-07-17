@@ -10,6 +10,7 @@
 class SrtfScheduler : public Scheduler
 {
 public:
+    bool preemptive = true;
     SrtfScheduler(JobQueue*, JobQueue*);
     void handle(Pcb* process);
 };

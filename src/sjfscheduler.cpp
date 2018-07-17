@@ -5,6 +5,7 @@ SjfScheduler::SjfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
 {
     ready_queue = _ready_queue;
     waiting_queue = _waiting_queue;
+    preemptive = false;
 }
 
 

@@ -10,6 +10,7 @@
 class PriorityScheduler : public Scheduler
 {
 public:
+    bool preemptive = false;
     PriorityScheduler(JobQueue*, JobQueue*);
     void handle(Pcb* process);
 };

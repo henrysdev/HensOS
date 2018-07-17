@@ -8,7 +8,8 @@ class Simulator
 private:
     Scheduler* scheduler;
 public:
-    Simulator(Scheduler* scheduler);
+    bool preemptive;
+    Simulator(Scheduler* scheduler, bool preemptive);
     void simulate(std::vector<Pcb*>* processes);
 };
 

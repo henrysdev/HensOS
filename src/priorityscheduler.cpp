@@ -5,6 +5,7 @@ PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waitin
 {
     ready_queue   = _ready_queue;
     waiting_queue = _waiting_queue;
+    preemptive = false;
 }
 
 
