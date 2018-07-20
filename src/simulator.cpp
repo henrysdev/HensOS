@@ -42,14 +42,13 @@ float calc_avg_wait(std::vector<int>* wait_times)
 }
 
 
-void Simulator::simulate(std::vector<Pcb*>* processes)
+float Simulator::simulate(std::vector<Pcb*>* processes)
 {
     /* sort by order of arrival time for simulation */
     std::stable_sort(processes->begin(), processes->end(), comp_by_arrival);
 
-    int clock = 0, i = 0;
+    int clock = 0, i = 0, alltime = sum_burst_times(processes);
     bool busy = 0;
-    int alltime = sum_burst_times(processes);
 
     /* keep dictionary of all original burst times by pid for timing */
     std::map<int, int> pid_bursts;
@@ -137,6 +136,5 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
         }
     }
 
-    float avg_wait = calc_avg_wait(wait_times);
-    std::cout << "avg wait time: " << avg_wait << std::endl;
+    return calc_avg_wait(wait_times);
 }

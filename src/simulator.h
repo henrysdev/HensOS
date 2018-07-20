@@ -10,7 +10,7 @@ private:
 public:
     bool preemptive;
     Simulator(Scheduler* scheduler, bool preemptive);
-    void simulate(std::vector<Pcb*>* processes);
+    float simulate(std::vector<Pcb*>* processes);
 };
 
 #endif //OS_PROJECT_SIMULATOR_H

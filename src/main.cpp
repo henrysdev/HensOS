@@ -19,17 +19,20 @@ int demo(const char* csvpath)
     //PriorityScheduler *scheduler = new PriorityScheduler(ready);
     Simulator* simulator = new Simulator(scheduler, false);
 
+
+    /* user interface mode (unstable) */
     if (csvpath[0] == '\0')
     {
         UserInterface* ui = new UserInterface(ready);
         return ui->mainmenu();
     }
+    /* csv reader mode */
     else
     {
         CsvReader* reader = new CsvReader(scheduler);
         std::vector<Pcb*>* procs = reader->readin(csvpath);
-
-        simulator->simulate(procs);
+        float avg_wait = simulator->simulate(procs);
+        std::cout << "avg wait time: " << avg_wait << std::endl;
         return 0;
     }
 }
