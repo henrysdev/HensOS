@@ -1,11 +1,15 @@
 #include "priorityscheduler.h"
 
 
-PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
+PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue)
 {
     ready_queue   = _ready_queue;
-    waiting_queue = _waiting_queue;
-    preemptive = false;
+}
+
+
+bool PriorityScheduler::preemptcomp(Pcb *defending, Pcb *contending)
+{
+    return contending->priority < defending->priority;
 }
 
 

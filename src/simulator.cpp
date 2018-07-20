@@ -1,5 +1,4 @@
 #include "simulator.h"
-#include <algorithm>
 #include <map>
 #include <sstream>
 #include <iostream>
@@ -11,6 +10,7 @@ Simulator::Simulator(Scheduler* _scheduler, bool _preemptive)
     preemptive = _preemptive;
 }
 
+
 const int sum_burst_times (std::vector<Pcb*>* procs)
 {
     int sum = 0;
@@ -20,14 +20,6 @@ const int sum_burst_times (std::vector<Pcb*>* procs)
         sum += procs->at(i)->arrival;
     }
     return sum;
-}
-
-
-std::string numtostr(int num)
-{
-    std::ostringstream ss;
-    ss << num;
-    return ss.str();
 }
 
 
@@ -54,9 +46,10 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
     /* sort by order of arrival time for simulation */
     std::stable_sort(processes->begin(), processes->end(), comp_by_arrival);
 
-    int clock = 0, i = 0, deadline = 0;
+    int clock = 0, i = 0;
     bool busy = 0;
     int alltime = sum_burst_times(processes);
+
     /* keep dictionary of all original burst times by pid for timing */
     std::map<int, int> pid_bursts;
     for (int q = 0; q < processes->size(); q++)
@@ -69,9 +62,7 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
     std::vector<int>* wait_times = new std::vector<int>;
 
     Pcb* nextproc = NULL;
-    int rem_time = -1;
     std::vector<Pcb*>* arriving_procs = new std::vector<Pcb*>;
-
 
     /* iterate clock until all processes have terminated gracefully */
     while (clock < alltime)
@@ -104,38 +95,45 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
         /* check for process switch applicability */
         if (scheduler->ready_queue->size > 0)
         {
-            if (nextproc == NULL || !busy)
+            /* handle idling scenario */
+            if (!busy || !nextproc)
             {
                 nextproc = scheduler->ready_queue->head->val;
                 scheduler->ready_queue->del(-1);
-                //deadline = clock + nextproc->burst;
-                rem_time = nextproc->burst;
             }
-            else if (preemptive && busy)
+            /* handle preemptive scenario */
+            else if (busy && preemptive)
             {
                 /* if process in ready queue has shorter remaining time, switch process */
                 Pcb* contender = scheduler->ready_queue->head->val;
-                if (contender->burst < rem_time)
+
+                if (scheduler->preemptcomp(nextproc, contender)) //if (contender->burst < nextproc->burst)
                 {
                     /* set process burst equal to its remaining time before putting back in ready queue */
-                    nextproc->burst = rem_time;
                     scheduler->handle(nextproc);
                     nextproc = contender;
-                    rem_time = contender->burst;
                     scheduler->ready_queue->del(-1);
                 }
             }
         }
 
-        ++clock; --rem_time;
-
-        if (rem_time == 0)
+        ++clock;
+        /* decrement burst time, assign busy-ness, and record wait time if process has terminated */
+        if (nextproc != NULL)
         {
-            int waittime = clock - nextproc->arrival - pid_bursts[nextproc->pid];
-            wait_times->push_back(waittime);
-            nextproc = NULL;
+            --nextproc->burst;
+            busy = nextproc->burst > 0;
+            if (nextproc->burst == 0)
+            {
+                int waittime = clock - nextproc->arrival - pid_bursts[nextproc->pid];
+                wait_times->push_back(waittime);
+                nextproc = NULL;
+            }
         }
-        busy = rem_time > 0;
+        else
+        {
+            busy = 0;
+        }
     }
 
     std::cout << calc_avg_wait(wait_times) << std::endl;

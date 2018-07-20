@@ -8,9 +8,9 @@
 class Scheduler
 {
 public:
-    JobQueue* waiting_queue;
     JobQueue* ready_queue;
     virtual void handle(Pcb* process) = 0;
+    virtual bool preemptcomp(Pcb* defending, Pcb* contending) = 0;
 };
 
 #endif //OS_PROJECT_SCHEDULER_H

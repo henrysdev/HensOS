@@ -1,11 +1,15 @@
 #include "sjfscheduler.h"
 
 
-SjfScheduler::SjfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
+SjfScheduler::SjfScheduler(JobQueue * _ready_queue)
 {
     ready_queue = _ready_queue;
-    waiting_queue = _waiting_queue;
-    preemptive = false;
+}
+
+
+bool SjfScheduler::preemptcomp(Pcb *defending, Pcb *contending)
+{
+    return contending->burst < defending->burst;
 }
 
 

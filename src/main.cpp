@@ -5,7 +5,6 @@
 #include "userinterface.h"
 #include "csvreader.h"
 #include "sjfscheduler.h"
-#include "srtfscheduler.h"
 #include "simulator.h"
 #include "priorityscheduler.h"
 #include "ganttchart.h"
@@ -18,11 +17,9 @@
 int demo(const char* csvpath)
 {
     JobQueue* ready = new JobQueue(MAX_CAPACITY);
-    JobQueue* waiting = new JobQueue(MAX_CAPACITY);
 
-    SrtfScheduler* scheduler = new SrtfScheduler(ready, waiting);
-    //SjfScheduler* scheduler = new SjfScheduler(ready, waiting);
-    //PriorityScheduler *scheduler = new PriorityScheduler(ready, waiting);
+    //SjfScheduler* scheduler = new SjfScheduler(ready);
+    PriorityScheduler *scheduler = new PriorityScheduler(ready);
     Simulator* simulator = new Simulator(scheduler, true);
 
     if (csvpath[0] == '\0')
