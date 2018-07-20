@@ -10,8 +10,9 @@
 class PriorityScheduler : public Scheduler
 {
 public:
-    PriorityScheduler(JobQueue*, JobQueue*);
+    PriorityScheduler(JobQueue*);
     void handle(Pcb* process);
+    bool preemptcomp(Pcb* defending, Pcb* contending);
 };
 
 #endif //OS_PROJECT_PRIORITYSCHEDULER_H

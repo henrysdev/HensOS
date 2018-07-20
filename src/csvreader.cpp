@@ -35,10 +35,7 @@ std::vector<Pcb*>* CsvReader::readin(const char* fpath)
 
     std::vector<Pcb*>* processes = new std::vector<Pcb*>;
 
-    std::string pid;
-    std::string arrival;
-    std::string burst;
-    std::string priority;
+    std::string pid, arrival, burst, priority;
 
     // iterate through csv file and execute line-by-line
     std::string line;

@@ -1,10 +1,15 @@
 #include "priorityscheduler.h"
 
 
-PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
+PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue)
 {
     ready_queue   = _ready_queue;
-    waiting_queue = _waiting_queue;
+}
+
+
+bool PriorityScheduler::preemptcomp(Pcb *defending, Pcb *contending)
+{
+    return contending->priority < defending->priority;
 }
 
 
@@ -19,9 +24,12 @@ void PriorityScheduler::handle(Pcb * process)
     ListNode* tmp = ready_queue->head;
     int pos = 0;
 
+    /* place process in appropriate position in the
+     * ready queue based on priority */
     while (tmp->next)
     {
-        /* if new process has shorter burst time, add at the correct pos */
+        /* if new process has higher priority,
+         * add at the correct pos */
         if (process->priority < tmp->val->priority)
         {
             ready_queue->add(process, pos);

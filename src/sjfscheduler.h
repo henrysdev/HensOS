@@ -10,8 +10,9 @@
 class SjfScheduler : public Scheduler
 {
 public:
-    SjfScheduler(JobQueue*, JobQueue*);
+    SjfScheduler(JobQueue*);
     void handle(Pcb* process);
+    bool preemptcomp(Pcb* defending, Pcb* contending);
 };
 
 #endif //OS_PROJECT_SHORTESTJOBFIRST_H

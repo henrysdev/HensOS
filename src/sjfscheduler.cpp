@@ -1,10 +1,15 @@
 #include "sjfscheduler.h"
 
 
-SjfScheduler::SjfScheduler(JobQueue * _ready_queue, JobQueue * _waiting_queue)
+SjfScheduler::SjfScheduler(JobQueue * _ready_queue)
 {
     ready_queue = _ready_queue;
-    waiting_queue = _waiting_queue;
+}
+
+
+bool SjfScheduler::preemptcomp(Pcb *defending, Pcb *contending)
+{
+    return contending->burst < defending->burst;
 }
 
 
@@ -19,9 +24,12 @@ void SjfScheduler::handle(Pcb * process)
     ListNode* tmp = ready_queue->head;
     int pos = 0;
 
+    /* place process in appropriate position in the
+     * ready queue based on burst time */
     while (tmp->next)
     {
-        /* if new process has shorter burst time, add at the correct pos */
+        /* if new process has shorter burst time,
+         * add at the correct pos */
         if (process->burst < tmp->val->burst)
         {
             ready_queue->add(process, pos);
