@@ -7,10 +7,7 @@
 #include "sjfscheduler.h"
 #include "simulator.h"
 #include "priorityscheduler.h"
-#include "ganttchart.h"
 
-#define NUM_PROCESSES 10
-#define FIRST_PID 1000
 #define MAX_CAPACITY 10
 
 
@@ -18,9 +15,9 @@ int demo(const char* csvpath)
 {
     JobQueue* ready = new JobQueue(MAX_CAPACITY);
 
-    //SjfScheduler* scheduler = new SjfScheduler(ready);
-    PriorityScheduler *scheduler = new PriorityScheduler(ready);
-    Simulator* simulator = new Simulator(scheduler, true);
+    SjfScheduler* scheduler = new SjfScheduler(ready);
+    //PriorityScheduler *scheduler = new PriorityScheduler(ready);
+    Simulator* simulator = new Simulator(scheduler, false);
 
     if (csvpath[0] == '\0')
     {
@@ -33,9 +30,6 @@ int demo(const char* csvpath)
         std::vector<Pcb*>* procs = reader->readin(csvpath);
 
         simulator->simulate(procs);
-        //GanttChart* chartbuilder = new GanttChart(ready);
-        //std::string output = chartbuilder->buildChart();
-        //std::cout << output << std::endl;
         return 0;
     }
 }

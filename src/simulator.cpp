@@ -31,13 +31,14 @@ const bool comp_by_arrival(Pcb* a, Pcb* b)
 
 float calc_avg_wait(std::vector<int>* wait_times)
 {
-    float avg = 0.0f;
+    float sum = 0.0f;
     for (int i = 0; i < wait_times->size(); i++)
     {
-        std::cout << wait_times->at(i) << std::endl;
-        avg += (float) wait_times->at(i);
+        std::cout << "wait time [" << i << "]: " << wait_times->at(i) << std::endl;
+        sum += (float) wait_times->at(i);
     }
-    return avg / (float) wait_times->size();
+    std::cout << "avg: " << sum << "/" << wait_times->size() << std::endl;
+    return sum / (float) wait_times->size();
 }
 
 
@@ -61,7 +62,7 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
 
     std::vector<int>* wait_times = new std::vector<int>;
 
-    Pcb* nextproc = NULL;
+    Pcb* currproc = NULL;
     std::vector<Pcb*>* arriving_procs = new std::vector<Pcb*>;
 
     /* iterate clock until all processes have terminated gracefully */
@@ -96,9 +97,9 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
         if (scheduler->ready_queue->size > 0)
         {
             /* handle idling scenario */
-            if (!busy || !nextproc)
+            if (!busy || !currproc)
             {
-                nextproc = scheduler->ready_queue->head->val;
+                currproc = scheduler->ready_queue->head->val;
                 scheduler->ready_queue->del(-1);
             }
             /* handle preemptive scenario */
@@ -107,27 +108,27 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
                 /* if process in ready queue has shorter remaining time, switch process */
                 Pcb* contender = scheduler->ready_queue->head->val;
 
-                if (scheduler->preemptcomp(nextproc, contender)) //if (contender->burst < nextproc->burst)
+                if (scheduler->preemptcomp(currproc, contender)) //if (contender->burst < currproc->burst)
                 {
                     /* set process burst equal to its remaining time before putting back in ready queue */
-                    scheduler->handle(nextproc);
-                    nextproc = contender;
+                    scheduler->handle(currproc);
+                    currproc = contender;
                     scheduler->ready_queue->del(-1);
                 }
             }
         }
 
         ++clock;
-        /* decrement burst time, assign busy-ness, and record wait time if process has terminated */
-        if (nextproc != NULL)
+        /* decrement burst time for current process and record wait time if process has terminated */
+        if (currproc != NULL)
         {
-            --nextproc->burst;
-            busy = nextproc->burst > 0;
-            if (nextproc->burst == 0)
+            --currproc->burst;
+            busy = currproc->burst > 0;
+            if (currproc->burst == 0)
             {
-                int waittime = clock - nextproc->arrival - pid_bursts[nextproc->pid];
+                int waittime = clock - currproc->arrival - pid_bursts[currproc->pid];
                 wait_times->push_back(waittime);
-                nextproc = NULL;
+                currproc = NULL;
             }
         }
         else
@@ -136,5 +137,6 @@ void Simulator::simulate(std::vector<Pcb*>* processes)
         }
     }
 
-    std::cout << calc_avg_wait(wait_times) << std::endl;
+    float avg_wait = calc_avg_wait(wait_times);
+    std::cout << "avg wait time: " << avg_wait << std::endl;
 }
