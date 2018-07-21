@@ -3,8 +3,7 @@
 
 #include "pcb.h"
 
-class ListNode
-{
+class ListNode {
 public:
     ListNode* next;
     Pcb* val;

@@ -7,12 +7,8 @@
 #include "scheduler.h"
 
 
-class CsvReader
-{
-private:
-    Scheduler* scheduler;
+class CsvReader {
 public:
-    CsvReader(Scheduler*);
     std::vector<Pcb*>* readin(const char*);
     Pcb* parse_pcb(std::string, std::string, std::string, std::string);
 };

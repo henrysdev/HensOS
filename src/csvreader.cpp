@@ -8,14 +8,7 @@
 #include "csvreader.h"
 
 
-CsvReader::CsvReader (Scheduler* _scheduler)
-{
-    scheduler = _scheduler;
-}
-
-
-Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str)
-{
+Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str) {
     int pid = atoi(pid_str.c_str());
     int arrival = atoi(arrival_str.c_str());
     int burst = atoi(burst_str.c_str());
@@ -26,9 +19,7 @@ Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::str
     return process;
 }
 
-//Process_id, arrival_time, burst_time, priority
-std::vector<Pcb*>* CsvReader::readin(const char* fpath)
-{   
+std::vector<Pcb*>* CsvReader::readin(const char* fpath) {
     std::ifstream ip(fpath);
 
     if (!ip.is_open()) std::cout << "ERROR: file open" << "\n";
@@ -39,8 +30,7 @@ std::vector<Pcb*>* CsvReader::readin(const char* fpath)
 
     // iterate through csv file and execute line-by-line
     std::string line;
-    while (ip.good())
-    {
+    while (ip.good()) {
         getline(ip, line, '\n');
         std::string delimiter = ",";
 
@@ -48,8 +38,7 @@ std::vector<Pcb*>* CsvReader::readin(const char* fpath)
         std::string token;
         int ctr = 0;
         std::string args[4];
-        while ((s_pos = line.find(delimiter)) != std::string::npos)
-        {
+        while ((s_pos = line.find(delimiter)) != std::string::npos) {
             token = line.substr(0, s_pos);
             args[ctr] = token;
             line.erase(0, s_pos + delimiter.length());
@@ -66,11 +55,9 @@ std::vector<Pcb*>* CsvReader::readin(const char* fpath)
 
         // DEBUG PRINT READ IN LINE
         std::cout << "\n" << std::endl;
-        for (int i = 0; i <= ctr; i++)
-        {
+        for (int i = 0; i <= ctr; i++) {
             std::cout << args[i];
-            if (i < ctr)
-            {
+            if (i < ctr) {
                 std::cout << ", ";
             }
         }

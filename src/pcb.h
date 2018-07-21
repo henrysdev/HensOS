@@ -1,8 +1,7 @@
 #ifndef PCB_H
 #define PCB_H
 
-class Pcb
-{
+class Pcb {
 public:
     Pcb(int);
     Pcb(int, int, int, int);

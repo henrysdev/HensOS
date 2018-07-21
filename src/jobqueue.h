@@ -4,8 +4,7 @@
 #include "listnode.h"
 
 
-class JobQueue
-{
+class JobQueue {
 private:
     int capacity;
 public:
@@ -15,7 +14,7 @@ public:
     JobQueue(int cap);
     void add(Pcb* pcb, int pos);
     void del(int targ_pid);
-    void print();
+    //void print();
 };
 
 #endif

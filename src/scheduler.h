@@ -5,8 +5,7 @@
 #include "jobqueue.h"
 #include "pcb.h"
 
-class Scheduler
-{
+class Scheduler {
 public:
     JobQueue* ready_queue;
     virtual void handle(Pcb* process) = 0;

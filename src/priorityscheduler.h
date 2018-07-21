@@ -7,8 +7,7 @@
 
 #include "scheduler.h"
 
-class PriorityScheduler : public Scheduler
-{
+class PriorityScheduler : public Scheduler {
 public:
     PriorityScheduler(JobQueue*);
     void handle(Pcb* process);
