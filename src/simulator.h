@@ -3,8 +3,7 @@
 
 #include "scheduler.h"
 
-class Simulator
-{
+class Simulator {
 private:
     Scheduler* scheduler;
 public:

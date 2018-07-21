@@ -2,8 +2,7 @@
 #include <iostream>
 
 
-JobQueue::JobQueue(int cap)
-{
+JobQueue::JobQueue(int cap) {
     capacity = cap;
     size  = 0;
     head  = 0;
@@ -11,18 +10,15 @@ JobQueue::JobQueue(int cap)
 }
 
 
-void JobQueue::print()
-{
+void JobQueue::print() {
     std::cout << std::endl;
-    if (!head || !tail)
-    {
+    if (!head || !tail) {
         std::cout << "(empty)" << std::endl;
         return;
     }
 
     ListNode* curr = head;
-    while (curr)
-    {
+    while (curr) {
         std::cout << curr->val->pid;
         curr = curr->next;
         if (curr) std::cout << " -> ";
@@ -31,11 +27,9 @@ void JobQueue::print()
 }
 
 
-void JobQueue::add(Pcb* proc, int pos)
-{
+void JobQueue::add(Pcb* proc, int pos) {
     /* check capacity of queue */
-    if (size >= capacity)
-    {
+    if (size >= capacity) {
         std::cout << "maximum capacity, can't accept any more processes!" << std::endl;
         return;
     }
@@ -43,15 +37,13 @@ void JobQueue::add(Pcb* proc, int pos)
     ListNode* link = new ListNode(proc);
 
     // if target position is outside of range of list
-    if (pos > size)
-    {
+    if (pos > size) {
         std::cout << "position requested is out of range. Appending to tail instead" << std::endl;
         pos = -1;
     }
 
     // if list is empty
-    if (!size)
-    {
+    if (!size) {
         head = tail = link;
         ++size;
         //print();
@@ -59,28 +51,19 @@ void JobQueue::add(Pcb* proc, int pos)
     }
 
     // add to tail
-    if (pos == -1 || pos == size)
-    {
+    if (pos == -1 || pos == size) {
         tail->next = link;
         tail = link;
-    }
-    // regular insert in middle
-    else
-    {
+    } else {
         // insert as new head
-        if (pos == 0)
-        {
+        if (pos == 0) {
             ListNode* tmp = head;
             head = link;
             head->next = tmp;
-        }
-        // insert somewhere between head and tail
-        else
-        {
+        } else {
             ListNode* curr = head;
             // loop to desired position
-            for (int i = 0; i < pos-1; i++)
-            {
+            for (int i = 0; i < pos-1; i++) {
                 curr = curr->next;
             }
             // insert new link into list
@@ -90,20 +73,16 @@ void JobQueue::add(Pcb* proc, int pos)
         }
     }
     ++size;
-    //print();
 }
 
 
-void JobQueue::del(int targ_pid)
-{
+void JobQueue::del(int targ_pid) {
     // if the list is not empty
-    if (size > 0)
-    {
+    if (size > 0) {
         ListNode* curr = head;
 
         // delete head if no PID specified (default case) OR if head has target PID 
-        if (targ_pid == -1 || curr->val->pid == targ_pid)
-        {
+        if (targ_pid == -1 || curr->val->pid == targ_pid) {
             head = curr->next;
             --size;
             //print();
@@ -111,10 +90,8 @@ void JobQueue::del(int targ_pid)
         }
 
         // iterate through list until target PID is found
-        while (curr->next)
-        {
-            if (curr->next->val->pid == targ_pid)
-            {
+        while (curr->next) {
+            if (curr->next->val->pid == targ_pid) {
                 curr->next = curr->next->next;
                 --size;
                 //print();
@@ -124,26 +101,17 @@ void JobQueue::del(int targ_pid)
         }
 
         // check last list node for matching PID
-        if (curr->val->pid == targ_pid)
-        {
+        if (curr->val->pid == targ_pid) {
             tail->next = curr;
             tail = curr;
             --size;
             //print();
             return;
-        }
-
-        // no matching PID found
-        else
-        {
+        } else {
             std::cout << "pid " << targ_pid << " not found in job queue" << std::endl;
         }
-    }
-    // list is empty
-    else
-    {
+    } else {
         std::cout << "nothing to delete, queue is empty" << std::endl;
-        //print();
         return;
     }
 

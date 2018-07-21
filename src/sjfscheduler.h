@@ -7,8 +7,7 @@
 
 #include "scheduler.h"
 
-class SjfScheduler : public Scheduler
-{
+class SjfScheduler : public Scheduler {
 public:
     SjfScheduler(JobQueue*);
     void handle(Pcb* process);

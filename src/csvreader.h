@@ -7,8 +7,7 @@
 #include "scheduler.h"
 
 
-class CsvReader
-{
+class CsvReader {
 private:
     Scheduler* scheduler;
 public:

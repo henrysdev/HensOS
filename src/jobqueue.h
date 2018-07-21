@@ -4,8 +4,7 @@
 #include "listnode.h"
 
 
-class JobQueue
-{
+class JobQueue {
 private:
     int capacity;
 public:
