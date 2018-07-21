@@ -8,11 +8,6 @@
 #include "csvreader.h"
 
 
-CsvReader::CsvReader (Scheduler* _scheduler) {
-    scheduler = _scheduler;
-}
-
-
 Pcb* CsvReader::parse_pcb(std::string pid_str, std::string arrival_str, std::string burst_str, std::string priority_str) {
     int pid = atoi(pid_str.c_str());
     int arrival = atoi(arrival_str.c_str());

@@ -2,7 +2,6 @@
 #include <string>
 
 #include "jobqueue.h"
-#include "userinterface.h"
 #include "csvreader.h"
 #include "sjfscheduler.h"
 #include "simulator.h"
@@ -18,7 +17,7 @@ int demo(const char* csvpath) {
     //PriorityScheduler *scheduler = new PriorityScheduler(ready);
 
     Simulator* simulator = new Simulator(scheduler, false);
-    CsvReader* reader = new CsvReader(scheduler);
+    CsvReader* reader = new CsvReader();
     std::vector<Pcb*>* procs = reader->readin(csvpath);
     float avg_wait = simulator->simulate(procs);
     std::cout << "avg wait time: " << avg_wait << std::endl;
@@ -27,12 +26,7 @@ int demo(const char* csvpath) {
 
 
 int main (int argc, char* argv[]) {
-    // default run mode (manual input) is run when no extra args passed
-    if (argc == 1) {
-        return demo("");
-    }
-    // automatic run mode (csv input) run when filepath is provided
-    else if (argc == 2) {
+    if (argc == 2) {
         const char* csvpath = argv[1];
         return demo(csvpath);
     }
