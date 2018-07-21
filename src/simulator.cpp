@@ -2,6 +2,7 @@
 #include <map>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 
 Simulator::Simulator(Scheduler* _scheduler, bool _preemptive)
@@ -47,10 +48,7 @@ float Simulator::simulate(std::vector<Pcb*>* processes)
     /* sort by order of arrival time for simulation */
     std::stable_sort(processes->begin(), processes->end(), comp_by_arrival);
 
-    int clock = 0, i = 0, alltime = sum_burst_times(processes);
-    bool busy = 0;
-
-    /* keep dictionary of all original burst times by pid for timing */
+    /* keep dictionary of all original burst times by pid for eventual wait time calculation */
     std::map<int, int> pid_bursts;
     for (int q = 0; q < processes->size(); q++)
     {
@@ -59,18 +57,22 @@ float Simulator::simulate(std::vector<Pcb*>* processes)
         pid_bursts[pid] = burst;
     }
 
-    std::vector<int>* wait_times = new std::vector<int>;
-
     Pcb* currproc = NULL;
     std::vector<Pcb*>* arriving_procs = new std::vector<Pcb*>;
+    std::vector<int>* wait_times = new std::vector<int>;
+    int alltime = sum_burst_times(processes);
+    bool busy = false;
 
-    /* iterate clock until all processes have terminated gracefully */
-    while (clock < alltime)
+    /* -- Main Clock Loop --
+     * use integer to represent current clock cycle, iterate through simulation
+     * for enough cycles that all processes execute and terminate gracefully,
+     * keep track of current position in processes to arrive with integer i */
+    for (int clock = 0, i = 0; clock < alltime;)
     {
         /* increment through given processes by arrival time */
         if (i < processes->size())
         {
-            /* handle arrival time tie edge case*/
+            /* get all processes arriving at the current clock cycle */
             while (processes->at(i)->arrival == clock)
             {
                 arriving_procs->push_back(processes->at(i));
@@ -82,7 +84,7 @@ float Simulator::simulate(std::vector<Pcb*>* processes)
             }
         }
 
-        /* handle any processes that have arrived at the current clock cycle */
+        /* handle all processes arriving at the current clock cycle */
         if (arriving_procs->size() > 0)
         {
             for (int n = 0; n < arriving_procs->size(); n++)
@@ -92,7 +94,7 @@ float Simulator::simulate(std::vector<Pcb*>* processes)
             arriving_procs->clear();
         }
 
-        /* check for process switch applicability */
+        /* check for context switch applicability */
         if (scheduler->ready_queue->size > 0)
         {
             /* handle idling scenario */
@@ -104,26 +106,26 @@ float Simulator::simulate(std::vector<Pcb*>* processes)
             /* handle preemptive scenario */
             else if (busy && preemptive)
             {
-                /* if process in ready queue has shorter remaining time, switch process */
-                Pcb* contender = scheduler->ready_queue->head->val;
-
-                if (scheduler->preemptcomp(currproc, contender)) //if (contender->burst < currproc->burst)
+                /* context switch if scheduler deems next process in ready queue to be executed */
+                Pcb* next = scheduler->ready_queue->head->val;
+                if (scheduler->preemptcomp(currproc, next))
                 {
-                    /* set process burst equal to its remaining time before putting back in ready queue */
                     scheduler->handle(currproc);
-                    currproc = contender;
+                    currproc = next;
                     scheduler->ready_queue->del(-1);
                 }
             }
         }
 
+        /* iterate clock cycle, decrement remaining burst time for current process,
+         * determine if process has terminated, calculate wait time if so */
         ++clock;
-        /* decrement burst time for current process and record wait time if process has terminated */
         if (currproc != NULL)
         {
             --currproc->burst;
             busy = currproc->burst > 0;
-            if (currproc->burst == 0)
+            /* calculate wait time if current process has terminated */
+            if (!currproc->burst)
             {
                 int waittime = clock - currproc->arrival - pid_bursts[currproc->pid];
                 wait_times->push_back(waittime);

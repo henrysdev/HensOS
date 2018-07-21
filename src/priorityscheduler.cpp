@@ -3,47 +3,40 @@
 
 PriorityScheduler::PriorityScheduler(JobQueue * _ready_queue)
 {
-    ready_queue   = _ready_queue;
+    ready_queue  = _ready_queue;
 }
-
-
-bool PriorityScheduler::preemptcomp(Pcb *defending, Pcb *contending)
-{
-    return contending->priority < defending->priority;
-}
-
 
 void PriorityScheduler::handle(Pcb * process)
 {
+    /* add process at head if ready queue is empty */
     if (!ready_queue->size)
     {
         ready_queue->add(process, -1);
         return;
     }
 
-    ListNode* tmp = ready_queue->head;
-    int pos = 0;
-
     /* place process in appropriate position in the
      * ready queue based on priority */
-    while (tmp->next)
+    ListNode* currnode = ready_queue->head;
+    int pos = 0;
+    while (currnode)
     {
         /* if new process has higher priority,
          * add at the correct pos */
-        if (process->priority < tmp->val->priority)
+        if (process->priority < currnode->val->priority)
         {
             ready_queue->add(process, pos);
             return;
         }
-        tmp = tmp->next;
+        currnode = currnode->next;
         ++pos;
-    }
-    if (process->priority < tmp->val->priority)
-    {
-        ready_queue->add(process, pos);
-        return;
     }
 
     /* add to end of queue by default */
     ready_queue->add(process, -1);
+}
+
+bool PriorityScheduler::preemptcomp(Pcb *curr, Pcb *next)
+{
+    return next->priority < curr->priority;
 }
